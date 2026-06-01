@@ -1,429 +1,409 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>个人主页 | 程序员</title>
-  <!-- 引入图标库 -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
-  <!-- 谷歌字体 -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    :root {
-      --bg-primary: #0f172a;
-      --bg-secondary: #1e293b;
-      --accent: #38bdf8;
-      --text-primary: #f1f5f9;
-      --text-secondary: #94a3b8;
-      --border-color: #334155;
-      --card-shadow: 0 10px 30px -15px rgba(2, 12, 27, 0.7);
-    }
-
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-
-    /* 布局容器 */
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    /* 导航栏 */
-    nav {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background-color: rgba(15, 23, 42, 0.9);
-      backdrop-filter: blur(10px);
-      z-index: 999;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .nav-wrapper {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      height: 70px;
-    }
-
-    .logo {
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--accent);
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 32px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      color: var(--text-primary);
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.3s ease;
-    }
-
-    .nav-links a:hover {
-      color: var(--accent);
-    }
-
-    /* 英雄区域 / 个人简介 */
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding-top: 70px;
-    }
-
-    .hero h1 {
-      font-size: clamp(40px, 8vw, 70px);
-      font-weight: 700;
-      margin-bottom: 16px;
-      line-height: 1.1;
-    }
-
-    .hero h2 {
-      font-size: clamp(30px, 5vw, 50px);
-      color: var(--text-secondary);
-      font-weight: 600;
-      margin-bottom: 24px;
-    }
-
-    .hero-desc {
-      max-width: 650px;
-      font-size: 18px;
-      color: var(--text-secondary);
-      margin-bottom: 40px;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 14px 28px;
-      background-color: transparent;
-      color: var(--accent);
-      border: 1px solid var(--accent);
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: 500;
-      transition: all 0.3s ease;
-    }
-
-    .btn:hover {
-      background-color: rgba(56, 189, 248, 0.1);
-      transform: translateY(-3px);
-    }
-
-    /* 通用区块样式 */
-    .section {
-      padding: 100px 0;
-    }
-
-    .section-title {
-      font-size: 32px;
-      font-weight: 700;
-      margin-bottom: 50px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .section-title::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background-color: var(--border-color);
-      max-width: 300px;
-    }
-
-    /* 技术栈 */
-    .skills-wrapper {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      gap: 24px;
-    }
-
-    .skill-card {
-      background-color: var(--bg-secondary);
-      padding: 24px;
-      border-radius: 10px;
-      text-align: center;
-      border: 1px solid var(--border-color);
-      transition: transform 0.3s ease, border-color 0.3s ease;
-    }
-
-    .skill-card:hover {
-      transform: translateY(-5px);
-      border-color: var(--accent);
-    }
-
-    .skill-card i {
-      font-size: 36px;
-      color: var(--accent);
-      margin-bottom: 12px;
-    }
-
-    .skill-card p {
-      font-weight: 500;
-    }
-
-    /* 作品展示 */
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 32px;
-    }
-
-    .project-card {
-      background-color: var(--bg-secondary);
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid var(--border-color);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .project-card:hover {
-      transform: translateY(-8px);
-      box-shadow: var(--card-shadow);
-      border-color: var(--accent);
-    }
-
-    .project-img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      background-color: var(--bg-primary);
-    }
-
-    .project-info {
-      padding: 24px;
-    }
-
-    .project-title {
-      font-size: 20px;
-      font-weight: 600;
-      margin-bottom: 12px;
-    }
-
-    .project-desc {
-      color: var(--text-secondary);
-      margin-bottom: 16px;
-      font-size: 15px;
-    }
-
-    .project-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .tag {
-      padding: 4px 10px;
-      background-color: rgba(56, 189, 248, 0.1);
-      color: var(--accent);
-      border-radius: 4px;
-      font-size: 12px;
-      font-weight: 500;
-    }
-
-    .project-links {
-      display: flex;
-      gap: 16px;
-    }
-
-    .project-links a {
-      color: var(--text-primary);
-      font-size: 18px;
-      transition: color 0.3s ease;
-    }
-
-    .project-links a:hover {
-      color: var(--accent);
-    }
-
-    /* 页脚 */
-    footer {
-      padding: 40px 0;
-      text-align: center;
-      color: var(--text-secondary);
-      border-top: 1px solid var(--border-color);
-    }
-
-    /* 响应式 */
-    @media (max-width: 768px) {
-      .nav-links {
-        gap: 16px;
-      }
-      
-      .section {
-        padding: 60px 0;
-      }
-
-      .projects-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>洪攀峰 | 前端开发工程师 · 个人主页</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="temp1.css">
+    <!-- 引入Tailwind CSS (本地) -->
+    <link rel="stylesheet" href="tailwind.min.css">
+    <!-- 引入Font Awesome图标 (本地) -->
+    <link rel="stylesheet" href="./fontawesome/all.min.css">
 </head>
+
 <body>
-  <!-- 导航栏 -->
-  <nav>
-    <div class="container nav-wrapper">
-      <div class="logo">DEV</div>
-      <ul class="nav-links">
-        <li><a href="#home">首页</a></li>
-        <li><a href="#skills">技术栈</a></li>
-        <li><a href="#projects">作品</a></li>
-      </ul>
-    </div>
-  </nav>
-
-  <!-- 个人简介 -->
-  <section class="hero" id="home">
-    <div class="container">
-      <h1>你好，我是 开发者</h1>
-      <h2>专注前端与全栈开发</h2>
-      <p class="hero-desc">
-        热爱编程与技术创新，擅长使用现代技术栈构建优质 Web 应用，注重用户体验与代码质量。
-        持续学习，持续输出，致力于打造简洁、高效、可扩展的软件产品。
-      </p>
-      <a href="#projects" class="btn">查看我的作品</a>
-    </div>
-  </section>
-
-  <!-- 技术栈 -->
-  <section class="section" id="skills">
-    <div class="container">
-      <h2 class="section-title">技术栈</h2>
-      <div class="skills-wrapper">
-        <div class="skill-card">
-          <i class="fa fa-html5"></i>
-          <p>HTML5</p>
-        </div>
-        <div class="skill-card">
-          <i class="fa fa-css3"></i>
-          <p>CSS3</p>
-        </div>
-        <div class="skill-card">
-          <i class="fa fa-js"></i>
-          <p>JavaScript</p>
-        </div>
-        <div class="skill-card">
-          <i class="fa fa-react"></i>
-          <p>React</p>
-        </div>
-        <div class="skill-card">
-          <i class="fa fa-git"></i>
-          <p>Git</p>
-        </div>
-        <div class="skill-card">
-          <i class="fa fa-database"></i>
-          <p>Node.js</p>
-        </div>
-        <div class="skill-card">
-          <i class="fa fa-python"></i>
-          <p>Python</p>
-        </div>
-        <div class="skill-card">
-          <i class="fa fa-linux"></i>
-          <p>Linux</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 作品展示 -->
-  <section class="section" id="projects">
-    <div class="container">
-      <h2 class="section-title">作品展示</h2>
-      <div class="projects-grid">
-        <!-- 项目1 -->
-        <div class="project-card">
-          <img src="https://picsum.photos/600/400?random=1" alt="项目截图" class="project-img">
-          <div class="project-info">
-            <h3 class="project-title">响应式企业官网</h3>
-            <p class="project-desc">基于现代前端技术开发的企业官网，支持深色模式、多端适配，动画流畅优雅。</p>
-            <div class="project-tags">
-              <span class="tag">HTML</span>
-              <span class="tag">CSS</span>
-              <span class="tag">JS</span>
+    <header
+        class="sticky top-0 z-50 w-full border-b border-gh-border bg-gh-bg/80 backdrop-blur-lg backdrop-saturate-150">
+        <nav class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-14 sm:h-16">
+            <a href="/" class="flex items-center gap-2 sm:gap-3 group">
+                <div class="relative w-8 h-8 sm:w-10 sm:h-10">
+                    <img src="assets/images/avatar.jpg"
+                        width="100" height="100" loading="eager"
+                        class="rounded-full ring-2 ring-gh-border group-hover:ring-indigo-500 transition-all duration-300"
+                        alt="PanfengHong">
+                </div>
+            </a>
+            <div class="flex items-center gap-0.5 sm:gap-2">
+                <!-- Desktop Navigation -->
+                <div class="hidden sm:flex items-center gap-1 select-none mr-4">
+                    <a href="/projects/"
+                        class="relative px-3 py-2 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gh-surface transition-all">我的项目
+                    </a>
+                    <a href="/tools/"
+                        class="relative px-3 py-2 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gh-surface transition-all">
+                        工具集合 <span
+                            class="absolute -top-[3px] -right-4 flex h-4 w-8 items-center justify-center rounded-full bg-indigo-500 text-[8px] font-bold text-white ring-2 ring-gh-bg">NEW
+                        </span>
+                    </a>
+                </div>
+                <!-- Mobile Navigation Dropdown -->
+                <div class="sm:hidden relative inline-block text-left" id="nav-dropdown">
+                    <button id="nav-dropdown-btn"
+                        class="px-2.5 py-2 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gh-surface transition-all flex items-center gap-1 active:scale-95">
+                        导航
+                        <svg class="w-4 h-4 transition-transform duration-200" id="nav-dropdown-icon"
+                            viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                    <div id="nav-dropdown-content"
+                        class="hidden absolute right-0 mt-2 w-36 rounded-xl bg-gh-surface/95 border border-gh-border shadow-2xl overflow-hidden z-50 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200">
+                        <a href="/projects/"
+                            class="flex items-center justify-between px-4 py-3 text-sm text-gray-200 hover:text-white hover:bg-white/5 transition-colors border-b border-gh-border/50">我的项目
+                        </a>
+                        <a href="/tools/"
+                            class="flex items-center justify-between px-4 py-3 text-sm text-gray-200 hover:text-white hover:bg-white/5 transition-colors border-b border-gh-border/50">
+                            工具集合 <span
+                                class="px-1.5 py-0.5 rounded-full bg-indigo-500 text-[8px] font-bold text-white">NEW
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <div class="w-0.5 h-4 sm:h-4 bg-gh-border mx-2"></div>
+                <a href="https://github.com/PanfengHong"
+                    class="p-1 rounded-lg text-gray-400 hover:text-white hover:bg-gh-surface transition-all"
+                    title="GitHub" target="_blank">
+                    <i class="fab fa-github"></i>
+                </a>
             </div>
-            <div class="project-links">
-              <a href="#"><i class="fa fa-github"></i></a>
-              <a href="#"><i class="fa fa-external-link"></i></a>
-            </div>
-          </div>
+        </nav>
+    </header>
+    <main>
+        <!------------- 个人简介 -------------->
+        <section class="max-w-6xl mx-auto px-4 sm:px-6">
+            <div class="min-h-[calc(100vh-4rem)] flex flex-col justify-center py-12 sm:py-0">
+                <div class="flex flex-col lg:flex-row items-center gap-10 lg:gap-20">
+                    <div class="relative flex-shrink-0 order-1 lg:order-2">
+                        <!-- Carbon风格代码窗口 -->
+                        <div class="carbon-code">
+                            <div class="code-header">
+                                <div class="window-dots">
+                                    <div class="dot dot-red"></div>
+                                    <div class="dot dot-yellow"></div>
+                                    <div class="dot dot-green"></div>
+                                </div>
+                                <div class="code-title">developer_profile.js</div>
+                                <div style="flex:1"></div>
+                                <i class="fas fa-expand-alt" style="font-size: 0.7rem; color:#5A6E8A;"></i>
+                            </div>
+                            <div class="code-body">
+                                <pre><code><span class="keyword">const</span> <span class="property">engineer</span> = {
+    <span class="property">name</span>: <span class="string">'洪攀峰'</span>,
+    <span class="property">role</span>: <span class="string">'前端开发工程师'</span>,
+    <span class="property">languages</span>: [<span class="string">'JavaScript'</span>, <span class="string">'TypeScript'</span>],
+    <span class="property">frameworks</span>: {
+        <span class="property">frontend</span>: [<span class="string">'React'</span>, <span class="string">'Vue'</span>, <span class="string">'Next.js'</span>],
+        <span class="property">backend</span>: [<span class="string">'Node.js'</span>, <span class="string">'FastAPI'</span>]
+    },
+    <span class="property">sayHello</span>: <span class="function">()</span> => {
+        <span class="keyword">return</span> <span class="string">'代码即是艺术 — 解决问题，超越边界。'</span>;
+    }
+};
+
+<span class="comment">// 每一天，写下一行更好的未来</span>
+<span class="keyword">console</span>.<span class="function">log</span>(<span class="property">engineer</span>.<span class="function">sayHello</span>());</code></pre>
         </div>
+                        </div>
+                    </div>
+                    <div class="flex-1 text-center lg:text-left order-2 lg:order-1">
+                        <h1
+                            class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight text-white mb-6 leading-[1.15]">
+                            Hi, I'm <span class="text-indigo-400">Patrick Hong</span>
+                            <br>
+                            <span class="text-gh-muted text-2xl sm:text-3xl lg:text-4xl">Frontend Engineer</span>
+                        </h1>
+                        <p class="text-base sm:text-lg text-gh-muted leading-relaxed mb-6 max-w-xl mx-auto lg:mx-0">
+                            拥有 6+ 年经验的前端工程师，专注现代 <span class="text-gh-text font-medium">Web前端</span> 技术与 <span class="text-gh-text font-medium">B端协同办公</span> 开发。热爱构建优雅、高性能的数字化产品。
+                        </p>
 
-        <!-- 项目2 -->
-        <div class="project-card">
-          <img src="https://picsum.photos/600/400?random=2" alt="项目截图" class="project-img">
-          <div class="project-info">
-            <h3 class="project-title">任务管理工具</h3>
-            <p class="project-desc">轻量化在线任务管理系统，支持增删改查、分类筛选、数据本地存储。</p>
-            <div class="project-tags">
-              <span class="tag">React</span>
-              <span class="tag">LocalStorage</span>
-            </div>
-            <div class="project-links">
-              <a href="#"><i class="fa fa-github"></i></a>
-              <a href="#"><i class="fa fa-external-link"></i></a>
-            </div>
-          </div>
-        </div>
+                        <!-- CTA Buttons -->
+                        <div class="quote-card">
+                            <div class="quote-title">Hello World!</div>
+                            <div class="quote-text">欢迎来到代码的世界，新手村的第一行代码</div>
+                        </div>
 
-        <!-- 项目3 -->
-        <div class="project-card">
-          <img src="https://picsum.photos/600/400?random=3" alt="项目截图" class="project-img">
-          <div class="project-info">
-            <h3 class="project-title">个人博客系统</h3>
-            <p class="project-desc">支持 Markdown 编写、文章分类、评论与后台管理的全栈博客平台。</p>
-            <div class="project-tags">
-              <span class="tag">Node.js</span>
-              <span class="tag">MongoDB</span>
-            </div>
-            <div class="project-links">
-              <a href="#"><i class="fa fa-github"></i></a>
-              <a href="#"><i class="fa fa-external-link"></i></a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+                        <!-- Tech Stack Tags -->
+                        <div class="flex flex-wrap gap-2 justify-center lg:justify-start mb-8">
+                            <div
+                                class="flex items-center gap-1.5 px-3 py-1.5 bg-gh-surface rounded-full border border-gh-border">
+                                <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>
+                                <span class="text-xs font-medium text-gh-text">React </span>
+                            </div>
+                            <div
+                                class="flex items-center gap-1.5 px-3 py-1.5 bg-gh-surface rounded-full border border-gh-border">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                <span class="text-xs font-medium text-gh-text">Vue </span>
+                            </div>
+                            <div
+                                class="flex items-center gap-1.5 px-3 py-1.5 bg-gh-surface rounded-full border border-gh-border">
+                                <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+                                <span class="text-xs font-medium text-gh-text">TypeScript </span>
+                            </div>
+                            <div
+                                class="flex items-center gap-1.5 px-3 py-1.5 bg-gh-surface rounded-full border border-gh-border">
+                                <span class="w-1.5 h-1.5 rounded-full bg-cyan-500"></span>
+                                <span class="text-xs font-medium text-gh-text">Tailwind </span>
+                            </div>
+                        </div>
 
-  <!-- 页脚 -->
-  <footer>
-    <div class="container">
-      <p>&copy; 2025 个人主页 | 用代码构建世界</p>
-    </div>
-  </footer>
+                        <div class="social-icons">
+                            <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                            <a href="#" aria-label="LinkedIn"><i class="fab fa-weixin"></i></a>
+                            <a href="#" aria-label="Mail"><i class="fas fa-envelope"></i></a>
+                            <a href="#" aria-label="CodePen"><i class="fab fa-codepen"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section>
 
-  <script>
-    // 平滑滚动
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-          behavior: 'smooth'
-        });
-      });
-    });
-  </script>
+        <!------------  分割线  --------------->
+        <div class="border-t border-gh-border"></div>
+
+        <!------------- 个人笔记 -------------->
+        <section class="max-w-6xl mx-auto px-4 sm:px-6">
+            <div class="py-20 lg:py-32">
+                <!-- Section Header -->
+                <div class="text-center mb-16">
+                    <p class="text-sm font-medium text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-3">
+                        notes</p>
+                    <h2 class="text-3xl lg:text-4xl font-bold text-white">笔记</h2>
+                    <p class="text-zinc-500 dark:text-zinc-400 mt-4 max-w-2xl mx-auto">从算法学习到低代码，再到 AI 驱动开发
+                    </p>
+                </div>
+                <!-- Projects Grid -->
+                <div class="projects grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <a href="https://github.com/PanfengHong" target="_blank" class="group block">
+                        <div
+                            class="relative overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-indigo-500/50 transition-all duration-300">
+                            <!-- Image -->
+                            <div class="aspect-video overflow-hidden">
+                                <img src="assets/images/tools.png"
+                                    alt="前端工具库" loading="lazy"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            </div>
+                            <!-- Content -->
+                            <div class="p-6">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <span
+                                        class="text-zinc-500 dark:text-zinc-400 w-6 h-6 flex items-center justify-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960"
+                                            width="40px" fill="currentColor">
+                                            <path
+                                                d="M446.67-163.67V-461l-260-150.33V-314l260 150.33Zm66.66 0 260-150.33v-298l-260 150.89v297.44ZM480-518l256.33-149L480-815.33 223-667l257 149ZM153.33-256q-15.83-9.28-24.58-24.48-8.75-15.19-8.75-33.19v-332.66q0-18 8.75-33.19 8.75-15.2 24.58-24.48l293.34-169q15.88-9 33.44-9 17.56 0 33.22 9l293.34 169q15.83 9.28 24.58 24.48 8.75 15.19 8.75 33.19v332.66q0 18-8.75 33.19-8.75 15.2-24.58 24.48L513.33-87q-15.88 9-33.44 9-17.56 0-33.22-9L153.33-256ZM480-480Z" />
+                                        </svg>
+                                    </span>
+                                    <span
+                                        class="text-sm font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Tools</span>
+                                </div>
+                                <h3
+                                    class="text-lg font-semibold text-zinc-900 dark:text-white mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                                    实用工具库</h3>
+                                <p class="text-sm text-zinc-600 dark:text-zinc-400 line-clamp-2 mb-4">一个集成了常用前端开发工具的集合，包括Markdown 编辑器、TailwindCSS 框架、TypeScript 等。</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span
+                                        class="text-xs px-2 py-1 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">Markdown</span>
+                                    <span
+                                        class="text-xs px-2 py-1 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">TailwindCSS</span>
+                                    <span
+                                        class="text-xs px-2 py-1 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">TypeScript</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="/projects/leetcode/" target="_blank" class="group block">
+                        <div
+                            class="relative overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-indigo-500/50 transition-all duration-300">
+                            <!-- Image -->
+                            <div class="aspect-video overflow-hidden">
+                                <img src="assets/images/Leetcode.png"
+                                    alt="Leetcode 算法笔记" loading="lazy"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            </div>
+                            <!-- Content -->
+                            <div class="p-6">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <span
+                                        class="text-zinc-500 dark:text-zinc-400 w-6 h-6 flex items-center justify-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960"
+                                            width="40px" fill="currentColor">
+                                            <path
+                                                d="M446.67-163.67V-461l-260-150.33V-314l260 150.33Zm66.66 0 260-150.33v-298l-260 150.89v297.44ZM480-518l256.33-149L480-815.33 223-667l257 149ZM153.33-256q-15.83-9.28-24.58-24.48-8.75-15.19-8.75-33.19v-332.66q0-18 8.75-33.19 8.75-15.2 24.58-24.48l293.34-169q15.88-9 33.44-9 17.56 0 33.22 9l293.34 169q15.83 9.28 24.58 24.48 8.75 15.19 8.75 33.19v332.66q0 18-8.75 33.19-8.75 15.2-24.58 24.48L513.33-87q-15.88 9-33.44 9-17.56 0-33.22-9L153.33-256ZM480-480Z" />
+                                        </svg>
+                                    </span>
+                                    <span
+                                        class="text-sm font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">algorithm</span>
+                                </div>
+                                <h3
+                                    class="text-lg font-semibold text-zinc-900 dark:text-white mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                                    Leetcode 算法笔记</h3>
+                                <p class="text-sm text-zinc-600 dark:text-zinc-400 line-clamp-2 mb-4">Leetcode 算法题练习，包括
+                                    Top 100, Top 100, Sort ... 等类目, 每个类目都有详细的解题思路和代码实现, 帮助开发者提升算法能力和面试准备。</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span
+                                        class="text-xs px-2 py-1 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">Leetcode</span>
+                                    <span
+                                        class="text-xs px-2 py-1 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">Top
+                                        100</span>
+                                    <span
+                                        class="text-xs px-2 py-1 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">Top
+                                        100</span>
+                                    <span
+                                        class="text-xs px-2 py-1 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">Sort</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href target="_blank" data-message="正在开发中，敬请期待！" class="group block">
+                        <div
+                            class="relative overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-indigo-500/50 transition-all duration-300">
+                            <!-- Image -->
+                            <div class="aspect-video overflow-hidden">
+                                <img src="assets/images/Digital.png"
+                                    alt="数字孪生" loading="lazy"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            </div>
+                            <!-- Content -->
+                            <div class="p-6">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <span
+                                        class="text-zinc-500 dark:text-zinc-400 w-6 h-6 flex items-center justify-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960"
+                                            width="40px" fill="currentColor">
+                                            <path
+                                                d="M446.67-163.67V-461l-260-150.33V-314l260 150.33Zm66.66 0 260-150.33v-298l-260 150.89v297.44ZM480-518l256.33-149L480-815.33 223-667l257 149ZM153.33-256q-15.83-9.28-24.58-24.48-8.75-15.19-8.75-33.19v-332.66q0-18 8.75-33.19 8.75-15.2 24.58-24.48l293.34-169q15.88-9 33.44-9 17.56 0 33.22 9l293.34 169q15.83 9.28 24.58 24.48 8.75 15.19 8.75 33.19v332.66q0 18-8.75 33.19-8.75 15.2-24.58 24.48L513.33-87q-15.88 9-33.44 9-17.56 0-33.22-9L153.33-256ZM480-480Z" />
+                                        </svg>
+                                    </span>
+                                    <span
+                                        class="text-sm font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Digital Twin</span>
+                                </div>
+                                <h3
+                                    class="text-lg font-semibold text-zinc-900 dark:text-white mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                                    数字孪生</h3>
+                                <p class="text-sm text-zinc-600 dark:text-zinc-400 line-clamp-2 mb-4">一款基于Threejs 开发的
+                                    可视化3D 数字孪生，用于展示和分析数据趋势</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span
+                                        class="text-xs px-2 py-1 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">数字孪生</span>
+                                    <span
+                                        class="text-xs px-2 py-1 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">Threejs
+                                        </span>
+                                    <span
+                                        class="text-xs px-2 py-1 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">3D</span>
+                                    <span
+                                        class="text-xs px-2 py-1 rounded-full bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">可视化大屏</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <!-- View All Link -->
+                <div class="text-center mt-12">
+                    <a href="/projects"
+                        class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-white font-medium border border-zinc-200 dark:border-zinc-800 hover:border-indigo-500/50 transition-all">
+                        <span>查看更多</span>
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <script type="module">
+                // 找到父容器（性能更好）
+                const projectsContainer = document.querySelector('.projects');
+
+                // 事件委托：绑定到父容器，只绑定一次
+                projectsContainer.addEventListener('click', (event) => {
+                    // 找到真正点击的a标签
+                    const link = event.target.closest('.group.block[data-message]:not([data-message=""])');
+
+                    if (!link)
+                        return;
+                    // 不是目标元素，直接返回
+
+                    const message = link.dataset.message;
+
+                    event.preventDefault();
+                    alert(message);
+                }
+                );
+            </script>
+        </section>
+
+        <div class="border-t border-gh-border"></div>
+        <section class="max-w-6xl mx-auto px-4 sm:px-6">
+            <div class="py-16 sm:py-20 lg:py-24">
+                <div class="text-center mb-10 sm:mb-12">
+                    <p class="text-xs sm:text-sm font-medium text-indigo-400 uppercase tracking-widest mb-2">
+                        Data
+                    </p>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white">数据</h2>
+                    <p class="text-sm sm:text-base text-gh-muted mt-3 max-w-xl mx-auto">这只是一条描述
+                    </p>
+                </div>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                    <div class="group relative">
+                        <div
+                            class="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl blur opacity-0 group-hover:opacity-20 transition duration-500">
+                        </div>
+                        <div
+                            class="relative p-4 sm:p-6 bg-gh-surface rounded-xl border border-gh-border text-center group-hover:border-gh-muted transition-all duration-300">
+                            <span class="text-2xl sm:text-3xl mb-2 sm:mb-3 block">📊 </span>
+                            <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1">147.6w+ </div>
+                            <div class="text-sm sm:text-base font-medium text-gh-text">代码量 </div>
+                            <div class="text-xs text-gh-muted mt-0.5">增加中 </div>
+                        </div>
+                    </div>
+                    <div class="group relative">
+                        <div
+                            class="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl blur opacity-0 group-hover:opacity-20 transition duration-500">
+                        </div>
+                        <div
+                            class="relative p-4 sm:p-6 bg-gh-surface rounded-xl border border-gh-border text-center group-hover:border-gh-muted transition-all duration-300">
+                            <span class="text-2xl sm:text-3xl mb-2 sm:mb-3 block">👥 </span>
+                            <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1">2,549+ </div>
+                            <div class="text-sm sm:text-base font-medium text-gh-text">用户数 </div>
+                            <div class="text-xs text-gh-muted mt-0.5">持续增长中 </div>
+                        </div>
+                    </div>
+                    <div class="group relative">
+                        <div
+                            class="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl blur opacity-0 group-hover:opacity-20 transition duration-500">
+                        </div>
+                        <div
+                            class="relative p-4 sm:p-6 bg-gh-surface rounded-xl border border-gh-border text-center group-hover:border-gh-muted transition-all duration-300">
+                            <span class="text-2xl sm:text-3xl mb-2 sm:mb-3 block">✍️ </span>
+                            <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1">6+ </div>
+                            <div class="text-sm sm:text-base font-medium text-gh-text">笔记 </div>
+                            <div class="text-xs text-gh-muted mt-0.5">创作中 </div>
+                        </div>
+                    </div>
+                    <div class="group relative">
+                        <div
+                            class="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl blur opacity-0 group-hover:opacity-20 transition duration-500">
+                        </div>
+                        <div
+                            class="relative p-4 sm:p-6 bg-gh-surface rounded-xl border border-gh-border text-center group-hover:border-gh-muted transition-all duration-300">
+                            <span class="text-2xl sm:text-3xl mb-2 sm:mb-3 block">🏅 </span>
+                            <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1">Lv.6 </div>
+                            <div class="text-sm sm:text-base font-medium text-gh-text">等级 </div>
+                            <div class="text-xs text-gh-muted mt-0.5">开发中 </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    <footer>
+        <p>© <script>document.write(new Date().getFullYear())</script> Patrick Hong. All rights reserved.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.7rem;">✨ Write the code | Change the world ✨</p>
+    </footer>
 </body>
+
 </html>
