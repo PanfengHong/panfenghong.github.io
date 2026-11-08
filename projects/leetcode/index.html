@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeetCode 算法笔记 | Patrick Hong</title>
+    <meta name="description" content="LeetCode 算法题解笔记，含解题思路、代码实现与复杂度分析">
+    <link rel="stylesheet" href="../../tailwind.min.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <!-- Markdown 渲染 + 代码高亮（CDN，仅本页加载） -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(145deg, #0B1120 0%, #0F172A 100%);
+            color: #E2E8F0;
+        }
+
+        /* Markdown 正文样式（暗色 GitHub 风格） */
+        .md-body {
+            line-height: 1.75;
+            font-size: 0.95rem;
+        }
+
+        .md-body h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 0 1.25rem;
+            color: #fff;
+        }
+
+        .md-body h2 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin: 2rem 0 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #30363d;
+            color: #fff;
+        }
+
+        .md-body p {
+            margin: 0.75rem 0;
+        }
+
+        .md-body a {
+            color: #818cf8;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .md-body a:hover {
+            color: #a5b4fc;
+        }
+
+        .md-body blockquote {
+            margin: 0.75rem 0;
+            padding: 0.5rem 1rem;
+            border-left: 3px solid #6366f1;
+            background: rgba(99, 102, 241, 0.08);
+            border-radius: 0 0.5rem 0.5rem 0;
+            color: #a5b4fc;
+        }
+
+        .md-body ul,
+        .md-body ol {
+            margin: 0.75rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .md-body ul {
+            list-style: disc;
+        }
+
+        .md-body ol {
+            list-style: decimal;
+        }
+
+        .md-body li {
+            margin: 0.3rem 0;
+        }
+
+        .md-body code:not(pre code) {
+            background: #21262d;
+            border: 1px solid #30363d;
+            border-radius: 0.375rem;
+            padding: 0.125rem 0.375rem;
+            font-size: 0.85em;
+            color: #f0f6fc;
+        }
+
+        .md-body pre {
+            margin: 1rem 0;
+            padding: 1rem 1.25rem;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 0.75rem;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .md-body pre code {
+            background: transparent;
+            padding: 0;
+        }
+
+        .md-body hr {
+            border: 0;
+            border-top: 1px solid #30363d;
+            margin: 2rem 0;
+        }
+
+        .md-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.875rem;
+        }
+
+        .md-body th,
+        .md-body td {
+            border: 1px solid #30363d;
+            padding: 0.5rem 0.75rem;
+            text-align: left;
+        }
+
+        .md-body th {
+            background: #161b22;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+    <!-- 顶栏 -->
+    <header class="sticky top-0 z-50 w-full border-b border-gh-border bg-gh-bg/80 backdrop-blur-lg backdrop-saturate-150">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-14 sm:h-16">
+            <div class="flex items-center gap-3">
+                <a href="/"
+                    class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-white transition-colors">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5m0 0l4-4m-4 4l4 4"></path>
+                    </svg>
+                    主页
+                </a>
+                <div class="w-0.5 h-4 bg-gh-border"></div>
+                <h1 class="text-sm sm:text-base font-semibold text-white">LeetCode 算法笔记</h1>
+                <span id="stats" class="hidden sm:inline text-xs text-gh-muted"></span>
+            </div>
+            <a href="https://github.com/PanfengHong/leetcode-notes" target="_blank" title="GitHub 仓库"
+                class="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-gh-surface transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" fill="currentColor" class="w-5 h-5">
+                    <path
+                        d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8z">
+                    </path>
+                </svg>
+            </a>
+        </div>
+    </header>
+
+    <main class="max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 flex-1">
+        <div class="flex flex-col lg:flex-row gap-6">
+            <!-- 侧边目录 -->
+            <aside class="lg:w-64 shrink-0 lg:sticky lg:top-20 lg:self-start lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto">
+                <div id="sidebar" class="space-y-5">
+                    <div class="text-sm text-gh-muted">正在加载目录…</div>
+                </div>
+            </aside>
+
+            <!-- 正文 -->
+            <article class="flex-1 min-w-0">
+                <div id="loading" class="text-sm text-gh-muted py-20 text-center">加载中…</div>
+                <div id="error" class="hidden py-20 text-center">
+                    <p class="text-sm text-rose-400 mb-2" id="error-msg">加载失败</p>
+                    <button onclick="location.reload()"
+                        class="text-xs px-4 py-2 rounded-full border border-gh-border text-gh-muted hover:text-white hover:border-gh-muted transition-colors">重试</button>
+                </div>
+                <div id="content" class="hidden">
+                    <div id="meta" class="flex flex-wrap items-center gap-2 mb-6"></div>
+                    <div id="md" class="md-body"></div>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <footer class="border-t border-gh-border py-6">
+        <p class="text-center text-xs text-gh-muted">内容来自
+            <a href="https://github.com/PanfengHong/leetcode-notes" target="_blank"
+                class="text-indigo-400 hover:text-indigo-300">PanfengHong/leetcode-notes</a>
+            · 每次访问实时拉取最新题解
+        </p>
+    </footer>
+
+    <script>
+        const CDN_BASES = [
+            'https://cdn.jsdelivr.net/gh/PanfengHong/leetcode-notes@main',
+            'https://raw.githubusercontent.com/PanfengHong/leetcode-notes/main'
+        ];
+        // 本地开发：若与 leetcode-notes 仓库同级起服务（如 py -m http.server），优先读本地
+        if (['localhost', '127.0.0.1'].includes(location.hostname)) {
+            CDN_BASES.unshift(`${location.origin}/leetcode-notes`);
+        }
+        const DIFF = {
+            easy: { label: '简单', cls: 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10', dot: 'bg-emerald-500' },
+            medium: { label: '中等', cls: 'text-amber-400 border-amber-500/30 bg-amber-500/10', dot: 'bg-amber-500' },
+            hard: { label: '困难', cls: 'text-rose-400 border-rose-500/30 bg-rose-500/10', dot: 'bg-rose-500' }
+        };
+
+        // 依次尝试多个 CDN 源
+        async function fetchWithFallback(pathname) {
+            let lastErr;
+            for (const base of CDN_BASES) {
+                try {
+                    const res = await fetch(`${base}/${pathname}`);
+                    if (res.ok) return res;
+                    lastErr = new Error(`HTTP ${res.status}`);
+                } catch (e) { lastErr = e; }
+            }
+            throw lastErr || new Error('所有源均不可用');
+        }
+
+        // 解析 front-matter
+        function parseFrontMatter(text) {
+            const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
+            const meta = {};
+            if (m) {
+                for (const line of m[1].split(/\r?\n/)) {
+                    const kv = line.match(/^(\w+)\s*:\s*(.*)$/);
+                    if (!kv) continue;
+                    let v = kv[2].trim();
+                    if (v.startsWith('[') && v.endsWith(']')) {
+                        meta[kv[1]] = v.slice(1, -1).split(',').map(s => s.trim()).filter(Boolean);
+                    } else {
+                        meta[kv[1]] = v.replace(/^["']|["']$/g, '');
+                    }
+                }
+            }
+            return { meta, body: m ? text.slice(m[0].length) : text };
+        }
+
+        const DIFF_CLS = { easy: 0, medium: 1, hard: 2 };
+
+        // 渲染侧边目录
+        function renderSidebar(manifest) {
+            const stats = manifest.stats;
+            document.getElementById('stats').textContent =
+                `共 ${manifest.total} 题 · 简 ${stats.easy} / 中 ${stats.medium} / 难 ${stats.hard}`;
+
+            document.getElementById('sidebar').innerHTML = manifest.categories.map(cat => `
+                <div>
+                    <div class="text-xs font-semibold uppercase tracking-wider text-gh-muted mb-2 px-2">${cat.name}</div>
+                    <nav class="space-y-0.5">
+                        ${cat.problems.map(p => {
+                const d = DIFF[(p.difficulty || '').toLowerCase()];
+                return `
+                            <a href="#${p.file}" data-file="${p.file}"
+                                class="prob-item flex items-center gap-2 px-2.5 py-2 rounded-lg text-sm text-gh-muted hover:text-white hover:bg-gh-surface transition-colors">
+                                <span class="w-1.5 h-1.5 rounded-full shrink-0 ${d ? d.dot : 'bg-gray-600'}"></span>
+                                <span class="truncate">${p.id}. ${p.title}</span>
+                            </a>`;
+            }).join('')}
+                    </nav>
+                </div>
+            `).join('');
+        }
+
+        // 渲染单篇题解
+        async function renderProblem(file) {
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            const content = document.getElementById('content');
+            loading.classList.remove('hidden');
+            error.classList.add('hidden');
+            content.classList.add('hidden');
+
+            document.querySelectorAll('.prob-item').forEach(a => {
+                a.classList.toggle('bg-gh-surface', a.dataset.file === file);
+                a.classList.toggle('text-white', a.dataset.file === file);
+            });
+
+            try {
+                const res = await fetchWithFallback(file);
+                const { meta, body } = parseFrontMatter(await res.text());
+
+                const d = DIFF[(meta.difficulty || '').toLowerCase()];
+                const tags = Array.isArray(meta.tags) ? meta.tags : [];
+                document.getElementById('meta').innerHTML = `
+                    ${d ? `<span class="text-xs px-2 py-0.5 rounded-full border ${d.cls}">${d.label}</span>` : ''}
+                    ${tags.map(t => `<span class="text-xs px-2 py-0.5 rounded-full bg-gh-surface border border-gh-border text-gh-muted">${t}</span>`).join('')}
+                    ${meta.date ? `<span class="text-xs text-gh-muted">${meta.date}</span>` : ''}
+                    ${meta.juejin ? `<a href="${meta.juejin}" target="_blank" class="text-xs text-indigo-400 hover:text-indigo-300">掘金文章 →</a>` : ''}
+                `;
+
+                document.getElementById('md').innerHTML = marked.parse(body);
+                document.querySelectorAll('#md pre code').forEach(el => hljs.highlightElement(el));
+                content.classList.remove('hidden');
+            } catch (e) {
+                document.getElementById('error-msg').textContent = `题解加载失败：${e.message}`;
+                error.classList.remove('hidden');
+            } finally {
+                loading.classList.add('hidden');
+            }
+        }
+
+        // hash 路由：#top-100/001-two-sum.md
+        async function route() {
+            const file = decodeURIComponent(location.hash.slice(1));
+            if (file && file.endsWith('.md')) {
+                await renderProblem(file);
+                window.scrollTo({ top: 0 });
+            }
+        }
+
+        (async function init() {
+            try {
+                const res = await fetchWithFallback('index.json');
+                const manifest = await res.json();
+                renderSidebar(manifest);
+
+                document.getElementById('sidebar').addEventListener('click', (e) => {
+                    const a = e.target.closest('a[href^="#"]');
+                    if (!a) return;
+                    history.replaceState(null, '', a.getAttribute('href'));
+                    e.preventDefault();
+                    route();
+                });
+
+                window.addEventListener('hashchange', route);
+                await route();
+                if (!location.hash) document.getElementById('loading').textContent = '← 从左侧目录选择一篇题解';
+            } catch (e) {
+                document.getElementById('sidebar').innerHTML =
+                    '<div class="text-sm text-rose-400">目录加载失败，请检查网络后刷新重试</div>';
+                document.getElementById('loading').textContent = '';
+            }
+        })();
+    </script>
+</body>
+
+</html>

@@ -187,9 +187,57 @@ footer {
 
 /* 响应式 */
 @media (max-width: 880px) {
-    
+
 }
 
 @media (max-width: 550px) {
-    
+
+}
+
+/* ============ 滚动渐显上浮动画 ============ */
+.reveal {
+    opacity: 0;
+    transform: translateY(2rem);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+    will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 网格子元素逐个错峰上浮 */
+.reveal-stagger>* {
+    opacity: 0;
+    transform: translateY(2rem);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
+.reveal-stagger.is-visible>* {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reveal-stagger.is-visible>*:nth-child(2) {
+    transition-delay: 0.12s;
+}
+
+.reveal-stagger.is-visible>*:nth-child(3) {
+    transition-delay: 0.24s;
+}
+
+.reveal-stagger.is-visible>*:nth-child(4) {
+    transition-delay: 0.36s;
+}
+
+/* 用户偏好减少动效时直接显示 */
+@media (prefers-reduced-motion: reduce) {
+
+    .reveal,
+    .reveal-stagger>* {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
 }
