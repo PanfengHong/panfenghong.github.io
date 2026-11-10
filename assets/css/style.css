@@ -241,3 +241,89 @@ footer {
         transition: none;
     }
 }
+
+/* ============ 笔记页 Markdown 增强（锚点/复制按钮/目录） ============ */
+/* github-markdown-dark 自带画布底色，这里保持页面渐变背景 */
+.markdown-body {
+    background: transparent;
+}
+
+/* 标题悬浮锚点 */
+.md-anchor {
+    margin-left: 0.4rem;
+    font-size: 0.85em;
+    color: #6e7681;
+    opacity: 0;
+    transition: opacity 0.15s;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.markdown-body h1:hover>.md-anchor,
+.markdown-body h2:hover>.md-anchor,
+.markdown-body h3:hover>.md-anchor,
+.markdown-body h4:hover>.md-anchor {
+    opacity: 1;
+}
+
+.md-anchor:hover {
+    color: #818cf8;
+}
+
+/* 代码块复制按钮 */
+.md-copy-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 1;
+    font-size: 0.7rem;
+    line-height: 1;
+    padding: 0.3rem 0.55rem;
+    border-radius: 0.375rem;
+    background: #21262d;
+    border: 1px solid #30363d;
+    color: #8b949e;
+    opacity: 0;
+    transition: opacity 0.15s, color 0.15s, border-color 0.15s;
+    cursor: pointer;
+}
+
+.markdown-body pre:hover>.md-copy-btn {
+    opacity: 1;
+}
+
+.md-copy-btn:hover {
+    color: #e6edf3;
+    border-color: #6e7681;
+}
+
+.md-copy-btn.copied {
+    color: #3fb950;
+    border-color: rgba(63, 185, 80, 0.5);
+    opacity: 1;
+}
+
+/* 右侧目录 */
+.toc-link {
+    display: block;
+    padding: 0.25rem 0 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: #8b949e;
+    border-left: 2px solid #21262d;
+    transition: color 0.15s, border-color 0.15s;
+    cursor: pointer;
+}
+
+.toc-link:hover {
+    color: #fff;
+    border-left-color: #6366f1;
+}
+
+.toc-link.lv3 {
+    padding-left: 1.4rem;
+}
+
+.toc-link.lv4 {
+    padding-left: 2rem;
+}
