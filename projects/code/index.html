@@ -12,20 +12,31 @@
     <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
     <link rel="stylesheet" href="../../tailwind.min.css">
     <link rel="stylesheet" href="../../assets/css/style.css">
-    <!-- GitHub 预览同款 Markdown 样式（暗色） -->
-    <link rel="stylesheet" href="../../assets/vendor/github-markdown-dark.css">
+    <!-- GitHub 预览同款 Markdown 样式（深/浅，disabled 由主题脚本控制） -->
+    <link rel="stylesheet" href="../../assets/vendor/github-markdown-dark.css" id="md-dark">
+    <link rel="stylesheet" href="../../assets/vendor/github-markdown-light.css" id="md-light" disabled>
     <!-- Markdown 渲染 + 代码高亮（本地自托管，同源缓存） -->
     <script src="../../assets/vendor/marked.min.js"></script>
     <!-- HTML 消毒，防笔记内嵌恶意代码 -->
     <script src="../../assets/vendor/purify.min.js"></script>
-    <link rel="stylesheet" href="../../assets/vendor/github-dark.min.css">
+    <!-- 代码高亮样式（深/浅切换） -->
+    <link rel="stylesheet" href="../../assets/vendor/github-dark.min.css" id="hl-dark">
+    <link rel="stylesheet" href="../../assets/vendor/github.min.css" id="hl-light" disabled>
     <script src="../../assets/vendor/highlight.min.js"></script>
-    <style>
-        body {
-            background: linear-gradient(145deg, #0B1120 0%, #0F172A 100%);
-            color: #E2E8F0;
-        }
-    </style>
+    <script>
+        // 主题预置：读取 localStorage（notes-theme），避免主题闪烁
+        (function () {
+            try {
+                if (localStorage.getItem('notes-theme') === 'light') {
+                    document.documentElement.dataset.theme = 'light';
+                    document.getElementById('md-dark').disabled = true;
+                    document.getElementById('hl-dark').disabled = true;
+                    document.getElementById('md-light').disabled = false;
+                    document.getElementById('hl-light').disabled = false;
+                }
+            } catch (e) { }
+        })();
+    </script>
 </head>
 
 <body class="min-h-screen flex flex-col">
@@ -34,33 +45,69 @@
         <div class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-14 sm:h-16">
             <div class="flex items-center gap-3">
                 <a href="/"
-                    class="flex items-center gap-1.5 text-sm text-gray-400 hover:text-white transition-colors">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5m0 0l4-4m-4 4l4 4"></path>
+                    class="group flex items-center gap-1.5 pl-1.5 pr-2.5 py-1 -my-1 rounded-full text-sm text-gh-muted hover:text-gh-text hover:bg-gh-surface transition-all">
+                    <svg class="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-0.5" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <polyline points="9 14 4 9 9 4"></polyline>
+                        <path d="M20 20v-7a4 4 0 0 0-4-4H4"></path>
                     </svg>
                     主页
                 </a>
                 <div class="w-0.5 h-4 bg-gh-border"></div>
-                <h1 class="text-sm sm:text-base font-semibold text-white">手搓代码笔记</h1>
+                <h1 class="text-sm sm:text-base font-semibold text-gh-text">手搓代码笔记</h1>
                 <span id="stats" class="hidden sm:inline text-xs text-gh-muted"></span>
             </div>
-            <a href="https://github.com/PanfengHong/code-notes" target="_blank" title="GitHub 仓库"
-                class="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-gh-surface transition-all">
+            <div class="flex items-center gap-1">
+                <button id="theme-toggle" aria-label="切换深浅主题"
+                    class="p-1.5 rounded-lg text-gh-muted hover:text-gh-text hover:bg-gh-surface transition-all">
+                    <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="w-5 h-5">
+                        <circle cx="12" cy="12" r="4"></circle>
+                        <path d="M12 2v2"></path>
+                        <path d="M12 20v2"></path>
+                        <path d="m4.93 4.93 1.41 1.41"></path>
+                        <path d="m17.66 17.66 1.41 1.41"></path>
+                        <path d="M2 12h2"></path>
+                        <path d="M20 12h2"></path>
+                        <path d="m6.34 17.66-1.41 1.41"></path>
+                        <path d="m19.07 4.93-1.41 1.41"></path>
+                    </svg>
+                    <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="w-5 h-5 hidden">
+                        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+                    </svg>
+                </button>
+                <a href="https://github.com/PanfengHong/code-notes" target="_blank" title="GitHub 仓库"
+                class="p-1.5 rounded-lg text-gh-muted hover:text-gh-text hover:bg-gh-surface transition-all">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" fill="currentColor" class="w-5 h-5">
                     <path
                         d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8z">
                     </path>
                 </svg>
             </a>
+            </div>
         </div>
+        <div id="progress"
+            class="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-150"
+            style="width:0%"></div>
     </header>
 
     <main class="max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 flex-1">
         <div class="flex flex-col lg:flex-row gap-6">
             <!-- 侧边目录 -->
-            <aside class="lg:w-64 shrink-0 lg:sticky lg:top-20 lg:self-start lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto">
-                <div id="sidebar" class="space-y-5">
-                    <div class="text-sm text-gh-muted">正在加载目录…</div>
+            <aside class="lg:w-72 shrink-0 lg:sticky lg:top-20 lg:self-start lg:max-h-[calc(100vh-6rem)] lg:flex lg:flex-col">
+                <div
+                    class="rounded-2xl border border-gh-border bg-gh-bg/60 overflow-hidden flex flex-col flex-1 lg:max-h-[calc(100vh-7rem)]">
+                    <div class="p-3 border-b border-gh-border">
+                        <input id="search" type="search" placeholder="搜索笔记…"
+                            class="w-full h-9 px-3 rounded-lg bg-gh-surface border border-gh-border text-sm text-gh-text placeholder:text-gh-muted focus:outline-none focus:border-indigo-500/60 focus:ring-1 focus:ring-indigo-500/40 transition-colors" />
+                    </div>
+                    <div id="sidebar" class="space-y-5 p-3 overflow-y-auto flex-1">
+                        <div class="text-sm text-gh-muted">正在加载目录…</div>
+                    </div>
                 </div>
             </aside>
 
@@ -70,12 +117,13 @@
                 <div id="error" class="hidden py-20 text-center">
                     <p class="text-sm text-rose-400 mb-2" id="error-msg">加载失败</p>
                     <button onclick="location.reload()"
-                        class="text-xs px-4 py-2 rounded-full border border-gh-border text-gh-muted hover:text-white hover:border-gh-muted transition-colors">重试</button>
+                        class="text-xs px-4 py-2 rounded-full border border-gh-border text-gh-muted hover:text-gh-text hover:border-gh-muted transition-colors">重试</button>
                 </div>
                 <div id="content" class="hidden">
                     <div id="meta" class="flex flex-wrap items-center gap-2 mb-6"></div>
                     <div id="md" class="markdown-body"></div>
                 </div>
+                <div id="prev-next" class="hidden mt-10 pt-6 border-t border-gh-border flex flex-col sm:flex-row gap-3"></div>
             </article>
 
             <!-- 右侧本页目录（宽屏显示） -->
@@ -85,12 +133,19 @@
 
     <footer class="border-t border-gh-border py-6">
         <p class="text-center text-xs text-gh-muted">内容来自
-            <a href="https://github.com/PanfengHong/code-notes" target="_blank"
+<a href="https://github.com/PanfengHong/code-notes" target="_blank"
                 class="text-indigo-400 hover:text-indigo-300">PanfengHong/code-notes</a>
             · 本地缓存加速，笔记更新自动同步
         </p>
     </footer>
 
+    <button id="back-top" aria-label="返回顶部"
+        class="hidden fixed bottom-6 right-6 z-40 p-2.5 rounded-full bg-gh-surface border border-gh-border text-gh-muted hover:text-gh-text hover:border-indigo-500/50 transition-all">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+            <path d="m18 15-6-6-6 6" />
+        </svg>
+    </button>
     <script src="../shared/notes-app.js"></script>
 </body>
 

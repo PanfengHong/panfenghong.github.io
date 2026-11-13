@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./projects/**/*.{html,js}"
@@ -16,11 +17,12 @@ module.exports = {
           light: '#f8fafc'
         },
         gh: {
-          bg: 'rgb(13 17 23)',
-          border: 'rgb(48 54 61)',
-          surface: 'rgb(22 27 34)',
-          muted: 'rgb(139 148 158)',
-          text: 'rgb(201 209 217)'
+          bg: 'rgb(var(--gh-bg) / <alpha-value>)',
+          border: 'rgb(var(--gh-border) / <alpha-value>)',
+          divider: 'rgb(var(--gh-divider) / <alpha-value>)',
+          surface: 'rgb(var(--gh-surface) / <alpha-value>)',
+          muted: 'rgb(var(--gh-muted) / <alpha-value>)',
+          text: 'rgb(var(--gh-text) / <alpha-value>)'
         }
       },
     },

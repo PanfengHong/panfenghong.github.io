@@ -26,8 +26,9 @@
         hard: { label: '困难', cls: 'text-rose-400 border-rose-500/30 bg-rose-500/10', dot: 'bg-rose-500' }
     };
 
-    let currentGen = '';   // 已渲染清单的 generatedAt
-    let currentFile = '';  // 正在浏览的文件
+    let currentGen = '';       // 已渲染清单的 generatedAt
+    let currentFile = '';      // 正在浏览的文件
+    let currentManifest = null; // 当前清单（用于搜索/上一篇下一篇）
 
     const el = (id) => document.getElementById(id);
 
@@ -127,19 +128,23 @@
     }
 
     function renderSidebar(manifest) {
+        currentManifest = manifest;
         const stats = manifest.stats;
         el('stats').textContent =
             `共 ${manifest.total} 篇 · 简 ${stats.easy} / 中 ${stats.medium} / 难 ${stats.hard}`;
 
         el('sidebar').innerHTML = manifest.categories.map((cat) => `
             <div>
-                <div class="text-xs font-semibold uppercase tracking-wider text-gh-muted mb-2 px-2">${cat.name}</div>
+                <div class="flex items-center gap-1.5 mb-2 px-2">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-gh-muted">${cat.name}</span>
+                    <span class="ml-auto text-[10px] text-gh-muted bg-gh-surface px-1.5 py-0.5 rounded-full">${cat.problems.length}</span>
+                </div>
                 <nav class="space-y-0.5">
                     ${cat.problems.map((p) => {
             const d = DIFF[(p.difficulty || '').toLowerCase()];
             return `
                         <a href="#${p.file}" data-file="${p.file}"
-                            class="prob-item flex items-center gap-2 px-2.5 py-2 rounded-lg text-sm text-gh-muted hover:text-white hover:bg-gh-surface transition-colors">
+                            class="prob-item flex items-center gap-2 px-2.5 py-2 rounded-lg text-sm text-gh-muted hover:text-gh-text hover:bg-gh-surface transition-colors">
                             <span class="w-1.5 h-1.5 rounded-full shrink-0 ${d ? d.dot : 'bg-gray-600'}"></span>
                             <span class="truncate">${p.id}. ${p.title}</span>
                         </a>`;
@@ -239,6 +244,99 @@
         });
     }
 
+    /* ---------------- 上一篇 / 下一篇导航 ---------------- */
+    function flatProblems() {
+        return currentManifest ? currentManifest.categories.flatMap((c) => c.problems) : [];
+    }
+
+    function renderPrevNext(file) {
+        const pn = el('prev-next');
+        if (!pn) return;
+        const flat = flatProblems();
+        const i = flat.findIndex((p) => p.file === file);
+        if (i === -1 || flat.length < 2) {
+            pn.classList.add('hidden');
+            return;
+        }
+        const prev = flat[i - 1];
+        const next = flat[i + 1];
+        const card = (label, p, align) => p ? `
+            <a href="#${p.file}" data-goto="${p.file}"
+                class="flex-1 min-w-0 group/pn rounded-xl border border-gh-border hover:border-indigo-500/50 hover:bg-gh-surface/60 transition-all p-3 ${align}">
+                <div class="text-xs text-gh-muted mb-1">${label}</div>
+                <div class="text-sm text-gh-text truncate group-hover/pn:text-gh-text">${p.title}</div>
+            </a>` : '<div class="flex-1 hidden sm:block"></div>';
+        pn.innerHTML = card('← 上一篇', prev, 'text-left') + card('下一篇 →', next, 'text-right');
+        pn.classList.remove('hidden');
+    }
+
+    /* ---------------- 目录搜索过滤 ---------------- */
+    function bindSearch() {
+        const input = el('search');
+        if (!input) return;
+        input.addEventListener('input', () => {
+            const q = input.value.trim().toLowerCase();
+            el('sidebar').querySelectorAll('.prob-item').forEach((a) => {
+                a.style.display = (!q || a.textContent.toLowerCase().includes(q)) ? '' : 'none';
+            });
+            el('sidebar').querySelectorAll(':scope > div').forEach((group) => {
+                const visible = Array.from(group.querySelectorAll('.prob-item'))
+                    .some((a) => a.style.display !== 'none');
+                group.style.display = visible ? '' : 'none';
+            });
+        });
+    }
+
+    /* ---------------- 深浅主题切换 ---------------- */
+    function applyTheme(theme, persist = true) {
+        const root = document.documentElement;
+        root.classList.add('theme-anim'); // 短暂开启全局颜色过渡
+        setTimeout(() => root.classList.remove('theme-anim'), 400);
+        root.dataset.theme = theme;
+        if (persist) {
+            try { localStorage.setItem('notes-theme', theme); } catch (e) { /* ignore */ }
+        }
+        // 切换 markdown 正文与代码高亮的浅/深样式表
+        const mdDark = document.getElementById('md-dark');
+        const mdLight = document.getElementById('md-light');
+        const hlDark = document.getElementById('hl-dark');
+        const hlLight = document.getElementById('hl-light');
+        if (mdDark) mdDark.disabled = theme === 'light';
+        if (mdLight) mdLight.disabled = theme !== 'light';
+        if (hlDark) hlDark.disabled = theme === 'light';
+        if (hlLight) hlLight.disabled = theme !== 'light';
+        // 切换按钮图标：深色时显示太阳（点击去浅色）
+        const sun = document.getElementById('icon-sun');
+        const moon = document.getElementById('icon-moon');
+        if (sun && moon) {
+            sun.classList.toggle('hidden', theme === 'light');
+            moon.classList.toggle('hidden', theme !== 'light');
+        }
+    }
+
+    function bindThemeToggle() {
+        const btn = document.getElementById('theme-toggle');
+        if (!btn) return;
+        btn.addEventListener('click', () => {
+            applyTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
+        });
+    }
+
+    /* ---------------- 阅读进度条 + 返回顶部 ---------------- */
+    function bindScrollUI() {
+        const bar = el('progress');
+        const backTop = el('back-top');
+        const onScroll = () => {
+            const h = document.documentElement;
+            const max = h.scrollHeight - h.clientHeight;
+            if (bar) bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+            if (backTop) backTop.classList.toggle('hidden', h.scrollTop <= 400);
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        if (backTop) backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        onScroll();
+    }
+
     /* ---------------- 加载流程 ---------------- */
     async function openFile(file) {
         currentFile = file;
@@ -246,8 +344,10 @@
 
         document.querySelectorAll('.prob-item').forEach((a) => {
             a.classList.toggle('bg-gh-surface', a.dataset.file === file);
-            a.classList.toggle('text-white', a.dataset.file === file);
+            a.classList.toggle('text-gh-text', a.dataset.file === file);
+            a.classList.toggle('active', a.dataset.file === file);
         });
+        renderPrevNext(file);
 
         el('content').classList.add('hidden');
         el('error').classList.add('hidden');
@@ -295,6 +395,22 @@
         fetchMdIntoCache(file).catch(() => { /* 预取失败静默 */ });
     }
 
+    /** 空状态页：未选择笔记时的占位展示 */
+    function showEmptyState() {
+        el('loading').innerHTML = `
+            <div class="py-28 text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                    class="w-14 h-14 mx-auto text-gh-muted/50">
+                    <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z" />
+                    <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+                    <path d="M9 13h6" />
+                    <path d="M9 17h3" />
+                </svg>
+                <div class="text-sm text-gh-muted mt-4">从左侧目录选择一篇笔记</div>
+            </div>`;
+    }
+
     async function init() {
         // 1. 命中缓存：立即渲染目录，无缓存则显示骨架屏
         const cached = readCache(KEY_MANIFEST);
@@ -338,12 +454,25 @@
         el('sidebar').addEventListener('focusin', prefetchHandler);
         window.addEventListener('hashchange', route);
         bindTocScroll();
+        bindSearch();
+        bindScrollUI();
+        bindThemeToggle();
 
-        // 4. 打开默认篇目；无 hash 时预取第一篇，用户点击即刻渲染
+        // 上一篇/下一篇导航
+        const pn = el('prev-next');
+        if (pn) pn.addEventListener('click', (e) => {
+            const a = e.target.closest('[data-goto]');
+            if (!a) return;
+            e.preventDefault();
+            history.replaceState(null, '', a.getAttribute('href'));
+            route();
+        });
+
+        // 4. 打开默认篇目；无 hash 时展示空状态页并预取第一篇
         if (location.hash) {
             route();
         } else {
-            el('loading').textContent = '← 从左侧目录选择一篇笔记';
+            showEmptyState();
             const firstCat = manifest && manifest.categories[0];
             if (firstCat && firstCat.problems[0]) {
                 fetchMdIntoCache(firstCat.problems[0].file).catch(() => { });

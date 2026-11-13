@@ -9,6 +9,15 @@
     <link rel="stylesheet" href="tailwind.min.css">
     <!-- 自定义样式 -->
     <link rel="stylesheet" href="assets/css/style.css">
+    <script>
+        // 主题预置：默认深色，localStorage（notes-theme）可切换，与笔记页共享偏好
+        (function () {
+            var light = false;
+            try { light = localStorage.getItem('notes-theme') === 'light'; } catch (e) { }
+            document.documentElement.classList.toggle('dark', !light);
+            if (light) document.documentElement.dataset.theme = 'light';
+        })();
+    </script>
 </head>
 
 <body>
@@ -26,16 +35,16 @@
                 <!-- Desktop Navigation -->
                 <div class="hidden sm:flex items-center gap-1 select-none mr-4">
                     <a href="#notes"
-                        class="relative px-3 py-2 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gh-surface transition-all">我的笔记
+                        class="relative px-3 py-2 rounded-lg text-sm text-gh-muted hover:text-gh-text hover:bg-gh-surface transition-all">我的笔记
                     </a>
                     <a href="#projects"
-                        class="relative px-3 py-2 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gh-surface transition-all">我的项目
+                        class="relative px-3 py-2 rounded-lg text-sm text-gh-muted hover:text-gh-text hover:bg-gh-surface transition-all">我的项目
                     </a>
                 </div>
                 <!-- Mobile Navigation Dropdown -->
                 <div class="sm:hidden relative inline-block text-left" id="nav-dropdown">
                     <button id="nav-dropdown-btn"
-                        class="px-2.5 py-2 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gh-surface transition-all flex items-center gap-1 active:scale-95">
+                        class="px-2.5 py-2 rounded-lg text-sm text-gh-muted hover:text-gh-text hover:bg-gh-surface transition-all flex items-center gap-1 active:scale-95">
                         导航
                         <svg class="w-4 h-4 transition-transform duration-200" id="nav-dropdown-icon"
                             viewBox="0 0 20 20" fill="currentColor">
@@ -47,16 +56,37 @@
                     <div id="nav-dropdown-content"
                         class="hidden absolute right-0 mt-2 w-36 rounded-xl bg-gh-surface/95 border border-gh-border shadow-2xl overflow-hidden z-50 backdrop-blur-xl duration-200">
                         <a href="#notes"
-                            class="flex items-center justify-between px-4 py-3 text-sm text-gray-200 hover:text-white hover:bg-white/5 transition-colors border-b border-gh-border/50">我的笔记
+                            class="flex items-center justify-between px-4 py-3 text-sm text-gh-muted hover:text-gh-text hover:bg-gh-surface transition-colors border-b border-gh-border/50">我的笔记
                         </a>
                         <a href="#projects"
-                            class="flex items-center justify-between px-4 py-3 text-sm text-gray-200 hover:text-white hover:bg-white/5 transition-colors">我的项目
+                            class="flex items-center justify-between px-4 py-3 text-sm text-gh-muted hover:text-gh-text hover:bg-gh-surface transition-colors">我的项目
                         </a>
                     </div>
                 </div>
                 <div class="w-0.5 h-4 sm:h-4 bg-gh-border mx-2"></div>
+                <button id="theme-toggle" aria-label="切换深浅主题"
+                    class="p-1 rounded-lg text-gh-muted hover:text-gh-text hover:bg-gh-surface transition-all">
+                    <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="w-4 h-4">
+                        <circle cx="12" cy="12" r="4"></circle>
+                        <path d="M12 2v2"></path>
+                        <path d="M12 20v2"></path>
+                        <path d="m4.93 4.93 1.41 1.41"></path>
+                        <path d="m17.66 17.66 1.41 1.41"></path>
+                        <path d="M2 12h2"></path>
+                        <path d="M20 12h2"></path>
+                        <path d="m6.34 17.66-1.41 1.41"></path>
+                        <path d="m19.07 4.93-1.41 1.41"></path>
+                    </svg>
+                    <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="w-4 h-4 hidden">
+                        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+                    </svg>
+                </button>
                 <a href="https://github.com/PanfengHong"
-                    class="p-1 rounded-lg text-gray-400 hover:text-white hover:bg-gh-surface transition-all"
+                    class="p-1 rounded-lg text-gh-muted hover:text-gh-text hover:bg-gh-surface transition-all"
                     title="GitHub" target="_blank">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" fill="currentColor"
                         class="w-4 h-4">
@@ -112,7 +142,7 @@
                     </div>
                     <div class="flex-1 text-center lg:text-left order-2 lg:order-1">
                         <h1
-                            class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight text-white mb-6 leading-[1.15]">
+                            class="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight text-gh-text mb-6 leading-[1.15]">
                             Hi, I'm <span class="text-indigo-400">Patrick Hong</span>
                             <br>
                             <span class="text-gh-muted text-2xl sm:text-3xl lg:text-4xl">Frontend Engineer</span>
@@ -197,7 +227,9 @@
         </section>
 
         <!------------  分割线  --------------->
-        <div class="border-t border-gh-border"></div>
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            <div class="h-px bg-gradient-to-r from-transparent via-gh-divider to-transparent"></div>
+        </div>
 
         <!------------- 个人笔记 -------------->
         <section id="notes" class="scroll-mt-16 sm:scroll-mt-20 max-w-6xl mx-auto px-4 sm:px-6">
@@ -206,7 +238,7 @@
                 <div class="reveal text-center mb-16">
                     <p class="text-sm font-medium text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-3">
                         notes</p>
-                    <h2 class="text-3xl lg:text-4xl font-bold text-white">笔记</h2>
+                    <h2 class="text-3xl lg:text-4xl font-bold text-gh-text">笔记</h2>
                     <p class="text-zinc-500 dark:text-zinc-400 mt-4 max-w-2xl mx-auto">记录灵感
                     </p>
                 </div>
@@ -215,7 +247,7 @@
                     <a href="/projects/leetcode/"
                         class="group block w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.34rem)]">
                         <div
-                            class="relative overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-indigo-500/50 transition-all duration-300">
+                            class="relative overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-indigo-500/50 shadow-sm shadow-zinc-300/40 hover:shadow-md hover:shadow-zinc-300/50 dark:shadow-none dark:hover:shadow-none transition-all duration-300">
                             <!-- Image -->
                             <div class="aspect-video overflow-hidden bg-gray-900">
                                 <img src="assets/images/leetcode.webp" alt="LeetCode 算法笔记" loading="lazy"
@@ -257,7 +289,7 @@
                     <a href="/projects/code/"
                         class="group block w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.34rem)]">
                         <div
-                            class="relative overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-indigo-500/50 transition-all duration-300">
+                            class="relative overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-indigo-500/50 shadow-sm shadow-zinc-300/40 hover:shadow-md hover:shadow-zinc-300/50 dark:shadow-none dark:hover:shadow-none transition-all duration-300">
                             <!-- Image -->
                             <div class="aspect-video overflow-hidden bg-gray-900">
                                 <img src="assets/images/code.webp" alt="手搓代码笔记" loading="lazy"
@@ -299,7 +331,7 @@
                     <a href="/projects/study/"
                         class="group block w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.34rem)]">
                         <div
-                            class="relative overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-indigo-500/50 transition-all duration-300">
+                            class="relative overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-indigo-500/50 shadow-sm shadow-zinc-300/40 hover:shadow-md hover:shadow-zinc-300/50 dark:shadow-none dark:hover:shadow-none transition-all duration-300">
                             <!-- Image -->
                             <div class="aspect-video overflow-hidden bg-gray-900">
                                 <img src="assets/images/study.webp" alt="学习笔记" loading="lazy"
@@ -341,7 +373,7 @@
                     </a>
                 </div>
                 <!-- View All Link -->
-                <div class="reveal text-center mt-12">
+                <!-- <div class="reveal text-center mt-12">
                     <a href="/projects"
                         class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-white font-medium border border-zinc-200 dark:border-zinc-800 hover:border-indigo-500/50 transition-all">
                         <span>查看更多</span>
@@ -349,7 +381,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                         </svg>
                     </a>
-                </div>
+                </div> -->
             </div>
             <script type="module">
                 // 找到所有卡片容器（笔记 + 项目板块）
@@ -398,7 +430,9 @@
         </section>
 
         <!------------  分割线  --------------->
-        <div class="border-t border-gh-border"></div>
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            <div class="h-px bg-gradient-to-r from-transparent via-gh-divider to-transparent"></div>
+        </div>
 
         <!------------- 项目 -------------->
         <section id="projects" class="scroll-mt-16 sm:scroll-mt-20 max-w-6xl mx-auto px-4 sm:px-6">
@@ -407,7 +441,7 @@
                 <div class="reveal text-center mb-16">
                     <p class="text-sm font-medium text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-3">
                         projects</p>
-                    <h2 class="text-3xl lg:text-4xl font-bold text-white">项目</h2>
+                    <h2 class="text-3xl lg:text-4xl font-bold text-gh-text">项目</h2>
                     <p class="text-zinc-500 dark:text-zinc-400 mt-4 max-w-2xl mx-auto">用技术创造价值
                     </p>
                 </div>
@@ -415,7 +449,7 @@
                 <div class="projects reveal reveal-stagger flex flex-wrap justify-center gap-8">
                     <a href="https://panfenghong.github.io/zdy-ui/" target="_blank" class="group block w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.34rem)]">
                         <div
-                            class="relative overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-indigo-500/50 transition-all duration-300">
+                            class="relative overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-indigo-500/50 shadow-sm shadow-zinc-300/40 hover:shadow-md hover:shadow-zinc-300/50 dark:shadow-none dark:hover:shadow-none transition-all duration-300">
                             <!-- Image -->
                             <div class="aspect-video overflow-hidden bg-gray-900">
                                 <img src="assets/images/components.webp" alt="组件库" loading="lazy"
@@ -454,7 +488,7 @@
                     <a href target="_blank" data-message="正在开发中，敬请期待！"
                         class="group block w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.34rem)]">
                         <div
-                            class="relative overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-indigo-500/50 transition-all duration-300">
+                            class="relative overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-indigo-500/50 shadow-sm shadow-zinc-300/40 hover:shadow-md hover:shadow-zinc-300/50 dark:shadow-none dark:hover:shadow-none transition-all duration-300">
                             <!-- Image -->
                             <div class="aspect-video overflow-hidden bg-gray-900">
                                 <img src="assets/images/tools.webp" alt="前端工具库" loading="lazy"
@@ -495,7 +529,7 @@
                     <a href target="_blank" data-message="正在开发中，敬请期待！"
                         class="group block w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.34rem)]">
                         <div
-                            class="relative overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-indigo-500/50 transition-all duration-300">
+                            class="relative overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 hover:border-indigo-500/50 shadow-sm shadow-zinc-300/40 hover:shadow-md hover:shadow-zinc-300/50 dark:shadow-none dark:hover:shadow-none transition-all duration-300">
                             <!-- Image -->
                             <div class="aspect-video overflow-hidden bg-gray-900">
                                 <img src="assets/images/Digital.webp" alt="数字孪生" loading="lazy"
@@ -542,7 +576,9 @@
         </section>
 
         <!------------  分割线  --------------->
-        <div class="border-t border-gh-border"></div>
+        <div class="max-w-6xl mx-auto px-4 sm:px-6">
+            <div class="h-px bg-gradient-to-r from-transparent via-gh-divider to-transparent"></div>
+        </div>
 
         <!------------- 数据统计 -------------->
         <section class="max-w-6xl mx-auto px-4 sm:px-6">
@@ -551,7 +587,7 @@
                     <p class="text-xs sm:text-sm font-medium text-indigo-400 uppercase tracking-widest mb-2">
                         Data
                     </p>
-                    <h2 class="text-2xl sm:text-3xl font-bold text-white">数据</h2>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-gh-text">数据</h2>
                     <p class="text-sm sm:text-base text-gh-muted mt-3 max-w-xl mx-auto">持之以恒
                     </p>
                 </div>
@@ -570,7 +606,7 @@
                                 <polyline points="8 6 2 12 8 18"></polyline>
                                 </svg>
                             </div>
-                            <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1">147.6w+ </div>
+                            <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-gh-text mb-1">147.6w+ </div>
                             <div class="text-sm sm:text-base font-medium text-gh-text">代码量 </div>
                             <div class="text-xs text-gh-muted mt-0.5">增加中 </div>
                         </div>
@@ -592,7 +628,7 @@
                                     <path d="M13 18h8"></path>
                                 </svg>
                             </div>
-                            <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1">1+ </div>
+                            <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-gh-text mb-1">1+ </div>
                             <div class="text-sm sm:text-base font-medium text-gh-text">LeetCode 题数 </div>
                             <div class="text-xs text-gh-muted mt-0.5">持续更新中 </div>
                         </div>
@@ -611,7 +647,7 @@
                                     <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
                                 </svg>
                             </div>
-                            <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1">6+ </div>
+                            <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-gh-text mb-1">6+ </div>
                             <div class="text-sm sm:text-base font-medium text-gh-text">笔记 </div>
                             <div class="text-xs text-gh-muted mt-0.5">创作中 </div>
                         </div>
@@ -634,7 +670,7 @@
                                     <path d="m7.5 4.27 9 5.15"></path>
                                 </svg>
                             </div>
-                            <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1">6+ </div>
+                            <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-gh-text mb-1">6+ </div>
                             <div class="text-sm sm:text-base font-medium text-gh-text">开源项目数 </div>
                             <div class="text-xs text-gh-muted mt-0.5">持续迭代中 </div>
                         </div>
@@ -657,14 +693,14 @@
         <div
             class="relative w-72 rounded-2xl bg-gh-surface border border-gh-border p-6 text-center shadow-2xl">
             <button id="wechat-close" aria-label="关闭"
-                class="absolute top-2.5 right-2.5 p-1 rounded-lg text-gh-muted hover:text-white hover:bg-white/10 transition-colors">
+                class="absolute top-2.5 right-2.5 p-1 rounded-lg text-gh-muted hover:text-gh-text hover:bg-gh-border/40 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                     stroke-width="2" stroke-linecap="round" class="w-4 h-4">
                     <path d="M18 6 6 18"></path>
                     <path d="m6 6 12 12"></path>
                 </svg>
             </button>
-            <div class="text-sm font-semibold text-white mb-4">微信扫一扫，添加好友</div>
+            <div class="text-sm font-semibold text-gh-text mb-4">微信扫一扫，添加好友</div>
             <!-- TODO: 替换为你的微信二维码图片 -->
             <img src="assets/images/wechat-qr.png" alt="微信二维码" class="w-48 h-48 mx-auto rounded-lg border border-gh-border"
                 onerror="this.style.display='none';document.getElementById('wechat-fallback').style.display='flex'">
@@ -723,6 +759,29 @@
             }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
 
             targets.forEach(el => observer.observe(el));
+        })();
+    </script>
+    <script>
+        // 主题切换：html.dark 控制 Tailwind dark: 变体，data-theme 控制颜色变量（与笔记页共享 localStorage）
+        (function () {
+            const root = document.documentElement;
+            const btn = document.getElementById('theme-toggle');
+            if (!btn) return;
+            const syncIcon = () => {
+                const light = root.dataset.theme === 'light';
+                document.getElementById('icon-sun').classList.toggle('hidden', light);
+                document.getElementById('icon-moon').classList.toggle('hidden', !light);
+            };
+            syncIcon();
+            btn.addEventListener('click', () => {
+                root.classList.add('theme-anim');
+                setTimeout(() => root.classList.remove('theme-anim'), 400);
+                const light = root.dataset.theme !== 'light';
+                if (light) { root.dataset.theme = 'light'; root.classList.remove('dark'); }
+                else { delete root.dataset.theme; root.classList.add('dark'); }
+                try { localStorage.setItem('notes-theme', light ? 'light' : 'dark'); } catch (e) { }
+                syncIcon();
+            });
         })();
     </script>
 </body>
