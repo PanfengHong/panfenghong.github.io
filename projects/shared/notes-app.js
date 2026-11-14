@@ -322,19 +322,32 @@
         });
     }
 
-    /* ---------------- 阅读进度条 + 返回顶部 ---------------- */
+    /* ---------------- 阅读进度条 + 返回顶部（window 与正文容器双通道） ---------------- */
     function bindScrollUI() {
         const bar = el('progress');
         const backTop = el('back-top');
-        const onScroll = () => {
-            const h = document.documentElement;
-            const max = h.scrollHeight - h.clientHeight;
-            if (bar) bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
-            if (backTop) backTop.classList.toggle('hidden', h.scrollTop <= 400);
+        const reader = el('reader'); // lg+ 桌面端正文内部滚动容器
+        const update = (top, max) => {
+            if (bar) bar.style.width = (max > 0 ? (top / max) * 100 : 0) + '%';
+            if (backTop) backTop.classList.toggle('hidden', top <= 400);
         };
-        window.addEventListener('scroll', onScroll, { passive: true });
-        if (backTop) backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-        onScroll();
+        // 移动端：整页滚动
+        window.addEventListener('scroll', () => {
+            const h = document.documentElement;
+            update(h.scrollTop, h.scrollHeight - h.clientHeight);
+        }, { passive: true });
+        // 桌面端：正文内部滚动
+        if (reader) {
+            reader.addEventListener('scroll', () => {
+                update(reader.scrollTop, reader.scrollHeight - reader.clientHeight);
+            }, { passive: true });
+        }
+        if (backTop) backTop.addEventListener('click', () => {
+            if (reader && reader.scrollHeight > reader.clientHeight) {
+                reader.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
     }
 
     /* ---------------- 加载流程 ---------------- */
@@ -412,6 +425,8 @@
     }
 
     async function init() {
+        // 标记本次会话来自笔记页，供主页恢复滚动位置
+        try { sessionStorage.setItem('came-from-notes', '1'); } catch (e) { /* ignore */ }
         // 1. 命中缓存：立即渲染目录，无缓存则显示骨架屏
         const cached = readCache(KEY_MANIFEST);
         if (cached) {

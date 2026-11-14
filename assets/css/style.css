@@ -383,3 +383,36 @@ html.theme-anim *::after {
 .prob-item.active {
     box-shadow: inset 2px 0 0 #6366f1;
 }
+
+/* 笔记页：lg+ 应用式布局，锁定整页滚动，仅正文区滚动 */
+@media (min-width: 1024px) {
+    body.notes-page {
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    body.notes-page>main {
+        min-height: 0;
+        overflow: hidden;
+    }
+}
+
+/* 正文滚动容器细滚动条 */
+#reader::-webkit-scrollbar {
+    width: 6px;
+}
+
+#reader::-webkit-scrollbar-thumb {
+    background: rgb(var(--gh-border));
+    border-radius: 3px;
+}
+
+#reader::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* 内滚容器滚动到底不连锁到整页，避免橡皮筋残影 */
+#reader,
+#sidebar {
+    overscroll-behavior: contain;
+}

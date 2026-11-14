@@ -738,6 +738,22 @@
         </style>
     </noscript>
     <script>
+        // 从笔记页返回时恢复离开前的滚动位置（首次访问不受影响）
+        (function () {
+            try {
+                if (sessionStorage.getItem('came-from-notes') === '1') {
+                    sessionStorage.removeItem('came-from-notes');
+                    var y = parseInt(sessionStorage.getItem('home-scroll') || '0', 10);
+                    if (y > 0) requestAnimationFrame(function () { window.scrollTo(0, y); });
+                }
+            } catch (e) { }
+            // 离开主页时记录滚动位置
+            window.addEventListener('pagehide', function () {
+                try { sessionStorage.setItem('home-scroll', String(window.scrollY)); } catch (e) { }
+            });
+        })();
+    </script>
+    <script>
         // 滚动渐显上浮：进入视口后添加 is-visible，只触发一次
         (function () {
             const targets = document.querySelectorAll('.reveal, .reveal-stagger');

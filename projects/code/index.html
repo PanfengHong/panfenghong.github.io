@@ -39,7 +39,7 @@
     </script>
 </head>
 
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col notes-page">
     <!-- 顶栏 -->
     <header class="sticky top-0 z-50 w-full border-b border-gh-border bg-gh-bg/80 backdrop-blur-lg backdrop-saturate-150">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-14 sm:h-16">
@@ -90,17 +90,14 @@
             </a>
             </div>
         </div>
-        <div id="progress"
-            class="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-150"
-            style="width:0%"></div>
     </header>
 
-    <main class="max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 flex-1">
-        <div class="flex flex-col lg:flex-row gap-6">
+    <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 flex-1">
+        <div class="flex flex-col lg:flex-row gap-6 lg:h-full lg:min-h-0">
             <!-- 侧边目录 -->
-            <aside class="lg:w-72 shrink-0 lg:sticky lg:top-20 lg:self-start lg:max-h-[calc(100vh-6rem)] lg:flex lg:flex-col">
+            <aside class="lg:w-72 shrink-0 lg:h-full lg:flex lg:flex-col">
                 <div
-                    class="rounded-2xl border border-gh-border bg-gh-bg/60 overflow-hidden flex flex-col flex-1 lg:max-h-[calc(100vh-7rem)]">
+                    class="rounded-2xl border border-gh-border bg-gh-bg/60 overflow-hidden flex flex-col h-full">
                     <div class="p-3 border-b border-gh-border">
                         <input id="search" type="search" placeholder="搜索笔记…"
                             class="w-full h-9 px-3 rounded-lg bg-gh-surface border border-gh-border text-sm text-gh-text placeholder:text-gh-muted focus:outline-none focus:border-indigo-500/60 focus:ring-1 focus:ring-indigo-500/40 transition-colors" />
@@ -112,7 +109,7 @@
             </aside>
 
             <!-- 正文 -->
-            <article class="flex-1 min-w-0">
+            <article id="reader" class="flex-1 min-w-0 lg:h-full lg:min-h-0 lg:overflow-y-auto lg:pr-1">
                 <div id="loading" class="text-sm text-gh-muted py-20 text-center">加载中…</div>
                 <div id="error" class="hidden py-20 text-center">
                     <p class="text-sm text-rose-400 mb-2" id="error-msg">加载失败</p>
@@ -127,7 +124,7 @@
             </article>
 
             <!-- 右侧本页目录（宽屏显示） -->
-            <nav id="toc" class="hidden xl:block xl:w-52 shrink-0 xl:sticky xl:top-20 xl:self-start xl:max-h-[calc(100vh-6rem)] xl:overflow-y-auto"></nav>
+            <nav id="toc" class="hidden xl:block xl:w-52 shrink-0 xl:h-full xl:overflow-y-auto"></nav>
         </div>
     </main>
 
